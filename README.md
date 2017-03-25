@@ -12,13 +12,13 @@ Fue programado en wxpython version 3 usando la libreria wx.lib.ogl.
 - python 2 o superior
 
 ## Fallos
-Debido a su pobre rendimiento no se debe trabajar con proyectos grandes debido a las deficiciencias que presenta en:
+Debido a su pobre rendimiento no se debe trabajar con proyectos grandes debido a las deficiencias que presenta en:
 - No se puede seleccionar mas de un elemento.
 - No se puede copiar, pegar y cortar
 - Solo admite formato png
 - No hay vista previa del proyecto
 - Algunos elementos dejan de poder seleccionarse
-- Las cordenasdas donde se encuantran estos elementos no es la correcta
+- Las cordenadas donde se encuentran estos elementos no es la correcta
 - No se puede guardar despues de realizar cambios se debe de remplazar el archivo
 - Falta redimensionar las imagenes importadas
 
@@ -28,11 +28,18 @@ pudiendo encontrarla en algun sitio web como flaticons
 
 
 ## Cambios
-De momento esl proyecto no presentara ningun cambio sustancial, por el motivo de que solo fue un poryecto sin motivos de 
+De momento el proyecto no presentara ningun cambio sustancial, por el motivo de que solo fue un poryecto sin motivos de 
 crecimiento alguno, solo era para solventar algunos problemillas de diseño.
 
 ## Algo mas
-EL programa no viene con ninguna garantia de que funcione en linux o mac, debido a que solo esta probado en entornos linux
+EL programa no viene con ninguna garantia de que funcione en windows o mac, debido a que solo esta probado en entornos linux
 
 ## Advertencia
 Dicho todo lo anterior no recomiendo su esu excesivo y buscar otras alternativas, aun que puede mejorarlo si lo deseas.
+
+
+## Ejemplo de desarrollo de un mockup
+![imagen](https://github.com/pacpac1992/mymockup/blob/master/example.png)
+
+## Interfaz
+![imagen](https://github.com/pacpac1992/mymockup/blob/master/MyMockup.png)
