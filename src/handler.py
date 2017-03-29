@@ -60,14 +60,22 @@ class MyEvtHandler(ogl.ShapeEvtHandler):
 
 	def OnSizingEndDragLeft(self, pt, x, y, keys, attch):
 		shape = self.GetShape()
-		self.parent.shape_propierties(shape,x,y)
-		ogl.ShapeEvtHandler.OnSizingEndDragLeft(self, pt, x, y, keys, attch)
+
+		nx = self.redondear(x)
+		ny = self.redondear(y)
+
+		self.parent.shape_propierties(shape,nx,ny)
+		ogl.ShapeEvtHandler.OnSizingEndDragLeft(self, pt, nx, ny, keys, attch)
 		self.UpdateStatusBar(self.GetShape())
 
 	def OnMovePost(self, dc, x, y, oldX, oldY, display):
 		shape = self.GetShape()
-		self.parent.shape_propierties(shape,x,y)
-		ogl.ShapeEvtHandler.OnMovePost(self, dc, x, y, oldX, oldY, display)
+
+		nx = self.redondear(x)
+		ny = self.redondear(y)
+
+		self.parent.shape_propierties(shape,nx,ny)
+		ogl.ShapeEvtHandler.OnMovePost(self, dc, nx, ny, oldX, oldY, display)
 		self.UpdateStatusBar(shape)
 		if "wxMac" in wx.PlatformInfo:
 			shape.GetCanvas().Refresh(False)
@@ -79,3 +87,12 @@ class MyEvtHandler(ogl.ShapeEvtHandler):
 	def OnLeftDoubleClick(self, *dontcare):
 		shape = self.GetShape()
 		self.parent.double_click(shape)
+
+	# Methods
+	def redondear(self,n):
+		d = 10.0
+		nf = float(n)
+
+		n = nf/d
+		redondeado = round(n)
+		return redondeado * 10.0

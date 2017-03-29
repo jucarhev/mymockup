@@ -539,6 +539,10 @@ class MyMockup(wx.Frame):
 			self.SetTitle(title)
 	
 	def export(self,evt):
+		self.statbmp = wx.StaticBitmap(self)
+
+		self._height_width_project()
+
 		dialog = Dialog_export_image(self,'Export')
 		result = dialog.ShowModal()
         	
@@ -643,9 +647,16 @@ class MyMockup(wx.Frame):
 		shape = ShapeSearch(self.canvas)
 		self._shape_to_handler(shape,'Search','-','-','-')
 
-	def draw_slider(self,evt):
-		shape = Slider(self.canvas,'icons/circle.png')
-		self._shape_to_handler(shape,'Search','-','-','-')
+	def draw_slider(self,evt=None, rotate = "Horizontal"):
+		if evt != None:
+			dialog = Dialog_Slider(self,'Slider').ShowModal()
+		else:
+			shape = Slider(self.canvas,'icons/circle.png',rotate)
+			if rotate == "Horizontal":
+				shape.SetFixedSize(False,20)
+			else:
+				shape.SetFixedSize(20,False)
+			self._shape_to_handler(shape,'Slider',rotate,'-','-')
 
 	def draw_accordeon(self,evt=None,item = '', lista = None,recursive=True):
 		if recursive != False:
@@ -671,12 +682,20 @@ class MyMockup(wx.Frame):
 	def draw_tooltip(self,evt):
 		shape = Tooltip()
 		self._shape_to_handler(shape,'Tooltip','-','-','-')
+		shape.AddText('text')
+		shape.ClearText()
 
-	def draw_scrollbar(self,evt):
-		shape = ScrollBar(self.canvas)
-		shape.SetFixedSize(False,20)
+	def draw_scrollbar(self,evt=None, rotate = "Horizontal"):
+		if evt != None:
+			dialog = Dialog_ScrollBar(self,'Scroolbar').ShowModal()
+		else:
+			shape = ScrollBar(self.canvas,rotate)
+			if rotate == "Horizontal":
+				shape.SetFixedSize(False,20)
+			else:
+				shape.SetFixedSize(20,False)
 		
-		self._shape_to_handler(shape,'Scroolbar','-','-','-')
+			self._shape_to_handler(shape,'Scroolbar',rotate,'-','-')
 
 	def draw_tab(self,evt=None,item = '', lista = None,recursive=True):
 		if recursive != False:
@@ -729,7 +748,6 @@ class MyMockup(wx.Frame):
 				self.image_duplicate(str(x))
 			
 	def double_click(self,shape):
-		print(shape)
 		if str(shape).count("BitmapShape") == True:
 			img = self.get_content_diccionary(self.shape_selected,'content')
 			dialog = Dialog_icon_resize(self,'size',img)
@@ -752,6 +770,9 @@ class MyMockup(wx.Frame):
 			img = self.get_content_diccionary(shape,'content')
 			dialog = Dialog_widget_edit(self,'Edit',img)
 			result = dialog.ShowModal()
+		elif str(shape).count("tooltip") == True:
+			dialog = Dialog_label_edit(self,'TooltipEdit')
+			result = dialog.ShowModal()
 	
 	def update_shape_selected(self,id_f):
 		for row in self.list_shape:
@@ -761,6 +782,7 @@ class MyMockup(wx.Frame):
 				self.canvas.PrepareDC(dc)
 				self.shape_selected.Select(False, dc)
 				self.shape_selected = row
+				self.shape_selected.SetDrawHandles(True)
 				self.shape_selected.Select(True, dc)
 				self.shape_selected.SetDraggable(True)
 
@@ -789,6 +811,9 @@ class MyMockup(wx.Frame):
 		result = wx.BitmapFromImage(image)
 		return result
 	
+	def rotate_shape(self,rot):
+		self.shape_selected.Rotate(self.pos_X.GetValue(),self.pos_Y.GetValue(),rotation)
+
 	def OnAboutBox(self,evt):
 		description = "MyMockup\n Diseñador de mockups experimental, no apto para\n"
 		description = description + "Produccion, por su pobre rendimiento, y errores menores.\n"
@@ -1066,7 +1091,7 @@ class MyMockup(wx.Frame):
 
 		if type_s != 'Button' or type_s != 'TextField' or type_s != 'Rectangle':
 			dc = wx.ClientDC(self)
-			shape.Move(dc, random.randint(10,500), random.randint(10,500))
+			shape.Move(dc, random.randint(100,500), random.randint(100,500))
 		else:
 			shape.SetX( random.randint(100,190) )
 			shape.SetY( random.randint(100,190) )
@@ -1099,6 +1124,18 @@ class MyMockup(wx.Frame):
 					row[4] = extra
 			i = i + 1
 
+	def _height_width_project(self):
+		height = []
+		width  = []
+		for i in self.list_shape:
+			height.append(i.GetY() + i.GetHeight())
+			width.append(i.GetX() + i.GetWidth())
+
+		data = [max(width),max(height)]
+		self.width_window = max(width)
+		self.height_window = max(height)
+
+		self.export_image("tmp/temp.png",data[0], data[1])
 
 class List_Shapes_(wx.Dialog):
 	
@@ -1209,7 +1246,7 @@ class Dialog_icon_resize(wx.Dialog):
 
 class Dialog_export_image(wx.Dialog):
 	def __init__(self, parent, title):
-		super(Dialog_export_image, self).__init__(parent, title=title,size=(260,150))
+		super(Dialog_export_image, self).__init__(parent, title=title,size=(460,150))
 		self.parent = parent
 		self.fileName = ''
 
@@ -1219,18 +1256,29 @@ class Dialog_export_image(wx.Dialog):
 		wx.StaticText(self,-1,'Width',pos=(10,50),size=(50,30))
 		self.width_shape = wx.SpinCtrl(self, -1, pos=(60,45), size=(50, -1))
 		self.width_shape.SetRange(16,1000)
-		self.width_shape.SetValue(100)
+		self.width_shape.SetValue(self.parent.width_window)
 
 		wx.StaticText(self,-1,'Heigth',pos=(140,50),size=(50,30))
 		self.height_shape = wx.SpinCtrl(self, -1, pos=(195,45),size=(50, -1))
 		self.height_shape.SetRange(16,1000)
-		self.height_shape.SetValue(100)
+		self.height_shape.SetValue(self.parent.height_window)
 
 		btn = wx.Button(self,-1,'Exportar',pos=(10,80))
 
+		png = wx.Image('tmp/temp.png', wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+		img = self.scale_bitmap(png, 180, 100)
+		wx.StaticBitmap(self, -1, img, (260, 10), (180,100))
+
 		btn_files.Bind(wx.EVT_BUTTON,self.file_route)
 		btn.Bind(wx.EVT_BUTTON,self.export)
-		
+
+	
+	def scale_bitmap(self,bitmap, width, height):
+		image = wx.ImageFromBitmap(bitmap)
+		image = image.Scale(width, height, wx.IMAGE_QUALITY_HIGH)
+		result = wx.BitmapFromImage(image)
+		return result
+
 	def export(self,evt):
 		if self.fileName != "":
 			self.parent.export_image(self.fileName,self.width_shape.GetValue(),self.height_shape.GetValue())
@@ -1250,6 +1298,8 @@ class Dialog_export_image(wx.Dialog):
 			os.chdir(curDir)
 			self.txt_nombre.SetValue(self.fileName)
 
+
+#----------------------------------------------------------------------------
 class ExceptionHandler:
 	def __init__(self):
 		self._buff = ""

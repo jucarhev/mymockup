@@ -10,6 +10,6 @@ class Tooltip(ogl.DrawnShape):
 		
 		self.SetDrawnPen(wx.BLACK_PEN)
 		self.SetDrawnBrush(wx.WHITE_BRUSH)
-		self.DrawPolygon([(-100, -15), (100,-15),(100,15),(80,15),(75,30),(70,15),(-100,15),(-100,-15)])
+		self.DrawPolygon([(-100, -12), (100,-12),(100,12),(80,12),(75,30),(70,12),(-100,12),(-100,-12)])
 
 		self.CalculateSize()
