@@ -11,6 +11,13 @@ Fue programado en wxpython version 3 usando la libreria wx.lib.ogl.
 - wxpython
 - python 2 o superior
 
+### Instalar wxpython
+- sudo apt-get install python-wxgtk3.0
+
+### Ejecutar archivo
+- python mymockup.py
+
+
 ## Fallos
 Debido a su pobre rendimiento no se debe trabajar con proyectos grandes debido a las deficiencias que presenta en:
 - No se puede seleccionar mas de un elemento.
