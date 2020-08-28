@@ -1,8 +1,8 @@
-# MyMockup
-diseñador de mockups
 
-## Es
-un pequeño programa escrito en wxpython para generar simples mockups en linux.
+# MyMockup
+diseñador de mockups es un pequeño programa escrito en wxpython para generar simples mockups en linux.
+
+## Programa no funcional
 
 ## Programacion
 Fue programado en wxpython version 3 usando la libreria wx.lib.ogl.
